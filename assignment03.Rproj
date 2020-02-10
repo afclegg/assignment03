@@ -1,13 +1,52 @@
-Version: 1.0
+---
+title: "assignment03"
+author: "Alex Clegg"
+date: "2/9/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 
-RestoreWorkspace: Default
-SaveWorkspace: Default
-AlwaysSaveHistory: Default
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
-EnableCodeIndexing: Yes
-UseSpacesForTab: Yes
-NumSpacesForTab: 2
-Encoding: UTF-8
 
-RnwWeave: Sweave
-LaTeX: pdfLaTeX
+```{r library}
+library(tidyverse)
+library(readxl)
+```
+
+
+```{r data}
+CA_commute <-read_excel("data/transportation-to-work-1.xlsx")
+
+```
+
+
+```{r graph 1}
+#total mode
+
+CA_commute %>%
+  
+
+
+```
+
+
+```{r graph 2}
+
+```
+
+
+```{r graph 3}
+
+```
+
+
+```{r graph 4}
+
+```
+
+
+
