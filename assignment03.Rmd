@@ -7,14 +7,15 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE,echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
 ```{r library,message = FALSE, echo=FALSE}
 library(tidyverse)
 library(readxl)
+library(ggrepel)
 ```
 
 
@@ -29,8 +30,14 @@ CA_commute <-read_excel("data/transportation-to-work-1.xlsx")
 CA_commute %>%
   filter(reportyear == "2008-2010") %>%
   filter(geotype == "CA") %>%
+  filter(mode != "CARTOTAL") %>%
   ggplot(aes(x = mode_name, y = percent)) +
-  geom_point()
+  geom_bar(stat = "identity") +
+  labs(x = "Commuting Mode", y = "Percent", title = "How Californians Get to Work", 
+       subtitle = "In 2008-2010 the vast majority of Californians got to work by driving alone") +
+  theme_classic() +
+  scale_y_continuous(limits = c(0,100)) +
+  theme(axis.text.x = element_text(angle=45,hjust = 1,vjust = 1))
 
 ```
 
@@ -44,20 +51,11 @@ CA_commute %>%
   filter(mode == "CARTOTAL") %>%
   group_by(region_name) %>%
   ggplot(aes(x = region_name, y = 100 - percent)) +
-  geom_point()
-
-```
-
-
-
-```{r LA County}
-
-CA_commute %>%
-  filter(reportyear == "2008-2010") %>%
-  filter(race_eth_code == 9) %>%
-  filter(geoname == "Los Angeles") %>%
-  ggplot(aes(x = mode_name, y = percent)) +
-  geom_point()
+  geom_col() +
+  labs(x = "Region", y = "Percent", title = "Non-Car Commuters in California", 
+       subtitle = "While driving is the predominant mode some regions have a significant number of commuters not using cars") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle=45,hjust = 1,vjust = 1))
 
 ```
 
@@ -66,13 +64,30 @@ CA_commute %>%
 
 CA_commute %>%
   filter(reportyear == "2008-2010") %>%
-  filter(race_eth_code == 9) %>%
   filter(mode == "CARTOTAL") %>%
   filter(geotype == "RE") %>%
-  ggplot(aes(x = pop_total, y = 100 - percent)) +
-  geom_point()
-
+  ggplot(aes(x = pop_total/1000, y = 100 - percent)) +
+  geom_text_repel(aes(label = region_name)) +
+  scale_x_log10() +
+  labs(x = "Region Population (Thousands)", y = "Percent", title = "Non-Car Commuters in California", 
+       subtitle = "Many people assume that higher populations lead to fewer car commuters, but that's not always true") +
+  theme_classic() 
+  
 ```
 
 
+
+```{r SF vs Bay Area vs State}
+
+CA_commute %>%
+  filter(reportyear == "2008-2010") %>%
+  filter(mode != "CARTOTAL") %>%
+  filter(geoname == c("Los Angeles city", "San Francisco city")) %>%
+  ggplot(aes(x = mode_name, y = percent, fill = geoname)) +
+  geom_col(position = position_dodge2(preserve = "total")) +
+   labs(x = "Region Population (Thousands)", y = "Percent", title = "Non-Car Commuters in California", 
+       subtitle = "Many people assume that higher populations lead to fewer car commuters, but that's not always true") +
+  theme(axis.text.x = element_text(angle=45,hjust = 1,vjust = 1))
+
+```
 
