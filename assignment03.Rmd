@@ -12,13 +12,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r library}
+```{r library,message = FALSE, echo=FALSE}
 library(tidyverse)
 library(readxl)
 ```
 
 
-```{r data}
+```{r data, echo=FALSE, message=FALSE}
 CA_commute <-read_excel("data/transportation-to-work-1.xlsx")
 
 ```
