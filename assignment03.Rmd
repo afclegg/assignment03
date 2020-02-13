@@ -31,13 +31,14 @@ CA_commute %>%
   filter(reportyear == "2008-2010") %>%
   filter(geotype == "CA") %>%
   filter(mode != "CARTOTAL") %>%
-  ggplot(aes(x = mode_name, y = percent)) +
+  ggplot(aes(x = mode_name, y = percent, fill = percent)) +
   geom_bar(stat = "identity") +
   labs(x = "Commuting Mode", y = "Percent", title = "How Californians Get to Work", 
        subtitle = "In 2008-2010 the vast majority of Californians got to work by driving alone") +
   theme_classic() +
   scale_y_continuous(limits = c(0,100)) +
-  theme(axis.text.x = element_text(angle=45,hjust = 1,vjust = 1))
+  theme(axis.text.x = element_text(angle=45,hjust = 1,vjust = 1)) +
+  theme(legend.position = "none")
 
 ```
 
@@ -50,12 +51,14 @@ CA_commute %>%
   filter(geotype == "RE") %>%
   filter(mode == "CARTOTAL") %>%
   group_by(region_name) %>%
-  ggplot(aes(x = region_name, y = 100 - percent)) +
+  ggplot(aes(x = region_name, y = 100 - percent, fill = reportyear)) +
   geom_col() +
   labs(x = "Region", y = "Percent", title = "Non-Car Commuters in California", 
        subtitle = "While driving is the predominant mode some regions have a significant number of commuters not using cars") +
   theme_classic() +
-  theme(axis.text.x = element_text(angle=45,hjust = 1,vjust = 1))
+  theme(axis.text.x = element_text(angle=45,hjust = 1,vjust = 1)) +
+  theme(legend.position = "none") + 
+  scale_fill_brewer(palette = "Blues")
 
 ```
 
@@ -81,10 +84,11 @@ CA_commute %>%
 
 CA_commute %>%
   filter(reportyear == "2008-2010") %>%
-  filter(mode != "CARTOTAL") %>%
-  filter(geoname == c("Los Angeles city", "San Francisco city")) %>%
+  filter(mode %in% c("ATHOME", "BICYCLE", "PUBLICTR", "WALK", "CARPOOL") ) %>%
+  filter(geoname %in% c("Los Angeles city", "San Francisco city")) %>%
   ggplot(aes(x = mode_name, y = percent, fill = geoname)) +
   geom_col(position = position_dodge2(preserve = "total")) +
+  coord_polar() +
    labs(x = "Region Population (Thousands)", y = "Percent", title = "Non-Car Commuters in California", 
        subtitle = "Many people assume that higher populations lead to fewer car commuters, but that's not always true") +
   theme(axis.text.x = element_text(angle=45,hjust = 1,vjust = 1))
