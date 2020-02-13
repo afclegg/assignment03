@@ -1,0 +1,78 @@
+---
+title: "assignment03"
+author: "Alex Clegg"
+date: "2/9/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r library}
+library(tidyverse)
+library(readxl)
+```
+
+
+```{r data}
+CA_commute <-read_excel("data/transportation-to-work-1.xlsx")
+
+```
+
+
+```{r Statewide Commutes}
+
+CA_commute %>%
+  filter(reportyear == "2008-2010") %>%
+  filter(geotype == "CA") %>%
+  ggplot(aes(x = mode_name, y = percent)) +
+  geom_point()
+
+```
+
+
+```{r non-Car Commuters by Region}
+#total mode
+
+CA_commute %>%
+  filter(reportyear == "2008-2010") %>%
+  filter(geotype == "RE") %>%
+  filter(mode == "CARTOTAL") %>%
+  group_by(region_name) %>%
+  ggplot(aes(x = region_name, y = 100 - percent)) +
+  geom_point()
+
+```
+
+
+
+```{r LA County}
+
+CA_commute %>%
+  filter(reportyear == "2008-2010") %>%
+  filter(race_eth_code == 9) %>%
+  filter(geoname == "Los Angeles") %>%
+  ggplot(aes(x = mode_name, y = percent)) +
+  geom_point()
+
+```
+
+
+```{r Drove Alone vs Place Pop}
+
+CA_commute %>%
+  filter(reportyear == "2008-2010") %>%
+  filter(race_eth_code == 9) %>%
+  filter(mode == "CARTOTAL") %>%
+  filter(geotype == "RE") %>%
+  ggplot(aes(x = pop_total, y = 100 - percent)) +
+  geom_point()
+
+```
+
+
+
