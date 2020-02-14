@@ -24,8 +24,9 @@ CA_commute <-read_excel("data/transportation-to-work-1.xlsx")
 
 ```
 
+In the 2000s California began looking in earnest to remove cars from the road, including encouraging people to get to-and-from work without getting in their car. Commuting trips--19% of all trips in California--are the first targetted by policymakers as they look to reduce vehicle miles travelled, both because commuting times are when roads are most congested and most commuters take fixed routes that can be replaced by carpools, transit, or other modes. Statewide commuters from 2008-2010 took over 75% of their commuting trips alone in their cars, showing significant room for growth.
 
-```{r Statewide Commutes}
+```{r Statewide Commutes, echo=TRUE}
 
 CA_commute %>%
   filter(reportyear == "2008-2010") %>%
@@ -42,8 +43,9 @@ CA_commute %>%
 
 ```
 
+Across the state the amount of commuters eschewing the solo commute varied from region to region, from around 10% to nearly 25%. This prompts future research and data collection to see if health outcomes associated with heavier car use, including decreased physcal activity and increased traffic fatalities, are more present in areas with higher rates of car commuting. The state can also look at the two high acheiving areas--the Bay Area and Santa Barbara--to see what lessons can be transferred to the other parts of the state.
 
-```{r non-Car Commuters by Region}
+```{r non-Car Commuters by Region,  echo=TRUE}
 #total mode
 
 CA_commute %>%
@@ -51,19 +53,19 @@ CA_commute %>%
   filter(geotype == "RE") %>%
   filter(mode == "CARTOTAL") %>%
   group_by(region_name) %>%
-  ggplot(aes(x = region_name, y = 100 - percent, fill = reportyear)) +
+  ggplot(aes(x = reorder(region_name,percent), y = 100 - percent, fill = "#FF6666")) +
   geom_col() +
   labs(x = "Region", y = "Percent", title = "Non-Car Commuters in California", 
        subtitle = "While driving is the predominant mode some regions have a significant number of commuters not using cars") +
   theme_classic() +
   theme(axis.text.x = element_text(angle=45,hjust = 1,vjust = 1)) +
-  theme(legend.position = "none") + 
-  scale_fill_brewer(palette = "Blues")
+  theme(legend.position = "none")
 
 ```
 
+One common indicator of a region not relying as heavily on cars is a high population. In theory, higher populations incidcate higher density and higher public investment in alternative modes of transportation (e.g. buses, trains, bike lanes). This is slightly borne out in the data, however the most populated region--Southern California--is close to the median in terms of car commuting,
 
-```{r Drove Alone vs Place Pop}
+```{r Drove Alone vs Place Pop, echo=TRUE}
 
 CA_commute %>%
   filter(reportyear == "2008-2010") %>%
@@ -72,15 +74,15 @@ CA_commute %>%
   ggplot(aes(x = pop_total/1000, y = 100 - percent)) +
   geom_text_repel(aes(label = region_name)) +
   scale_x_log10() +
-  labs(x = "Region Population (Thousands)", y = "Percent", title = "Non-Car Commuters in California", 
-       subtitle = "Many people assume that higher populations lead to fewer car commuters, but that's not always true") +
+  labs(x = "Region Population (Thousands)", y = "Percent", title = "Population and non-Car Commuting in California", 
+       subtitle = "Regions with higher populations are slightly less car-reliant") +
   theme_classic() 
   
 ```
 
+When the two regions are compared its clear that San Francisco (the focal point of the Bay Area) significantly trumps Los Angeles (the focal point of Southern California) in public transportation ridership, with roughly 3x as many riders. San Francisco also has more walkers and bikers. Officials in Los Angeles should look up the coast to see what lessons they can learn from San Francisco as they attempt to transition their citizens away from driving alone.
 
-
-```{r SF vs Bay Area vs State}
+```{r SF vs Bay Area vs State, echo=TRUE}
 
 CA_commute %>%
   filter(reportyear == "2008-2010") %>%
@@ -88,10 +90,13 @@ CA_commute %>%
   filter(geoname %in% c("Los Angeles city", "San Francisco city")) %>%
   ggplot(aes(x = mode_name, y = percent, fill = geoname)) +
   geom_col(position = position_dodge2(preserve = "total")) +
-  coord_polar() +
-   labs(x = "Region Population (Thousands)", y = "Percent", title = "Non-Car Commuters in California", 
-       subtitle = "Many people assume that higher populations lead to fewer car commuters, but that's not always true") +
-  theme(axis.text.x = element_text(angle=45,hjust = 1,vjust = 1))
+  theme(axis.text.x = element_text(angle=45)) +
+  theme(legend.title = element_blank()) +
+  coord_polar(start = 10, clip = "on") +
+   labs(x = "Commuter Mode", y = "Percent", title = "Bay Area and Southern California Head-to-Head", 
+       subtitle = "SF vs LA non-Car Commuters") +
+  theme_minimal()
 
 ```
 
+This data is from 2008-2010, and new data releases should shed light on how these regions have decreased car travel over the 2010s.
