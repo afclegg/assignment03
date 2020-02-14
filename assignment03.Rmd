@@ -90,10 +90,9 @@ CA_commute %>%
   filter(geoname %in% c("Los Angeles city", "San Francisco city")) %>%
   ggplot(aes(x = mode_name, y = percent, fill = geoname)) +
   geom_col(position = position_dodge2(preserve = "total")) +
-  theme(axis.text.x = element_text(angle=45)) +
-  theme(legend.title = element_blank()) +
+  theme(legend.position = "blank") +
   coord_polar(start = 10, clip = "on") +
-   labs(x = "Commuter Mode", y = "Percent", title = "Bay Area and Southern California Head-to-Head", 
+  labs(x = "Commuter Mode", y = "Percent", title = "Bay Area and Southern California Head-to-Head", 
        subtitle = "SF vs LA non-Car Commuters") +
   theme_minimal()
 
